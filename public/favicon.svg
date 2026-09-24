@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="glowGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#7C3AED" />
+      <stop offset="50%" stop-color="#06B6D4" />
+      <stop offset="100%" stop-color="#38BDF8" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="#05060A" />
+  <rect x="1" y="1" width="62" height="62" rx="15" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" />
+  <path d="M18 46V18H28C33 18 36 21 36 25C36 28 34 30.5 31 31.5C35 32.5 37 35.5 37 39.5C37 44 33 46 28 46H18ZM25 29H28C30.5 29 32 27.5 32 25.5C32 23.5 30.5 22 28 22H25V29ZM25 42H28.5C31.5 42 33 40.5 33 38.5C33 36.5 31.5 35 28.5 35H25V42Z" fill="url(#glowGrad)" />
+  <path d="M42 46V23L48 35L54 23V46H50V31.5L48 35.5L46 31.5V46H42Z" fill="#38BDF8" opacity="0.9" />
+  <circle cx="50" cy="18" r="3" fill="#22D3EE" filter="url(#glow)" />
+</svg>

@@ -1,0 +1,167 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  body {
+    background-color: #050609;
+    color: #F8FAFC;
+    min-height: 100vh;
+  }
+
+  /* Custom sleek scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #050609;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, #FF1768, #8B5CF6);
+  }
+}
+
+@layer utilities {
+  /* Gradients */
+  .text-gradient-pink-purple {
+    background: linear-gradient(135deg, #FF1768 0%, #8B5CF6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .text-gradient-purple-cyan {
+    background: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 45%, #06D6FF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .text-gradient-full {
+    background: linear-gradient(135deg, #FF1768 0%, #8B5CF6 45%, #06D6FF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Navbar glass styling matching reference */
+  .glass-nav {
+    background: rgba(20, 20, 24, 0.75);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 40px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+  }
+
+  .glass-nav-scrolled {
+    background: rgba(14, 15, 20, 0.90);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow: 0 14px 45px rgba(0, 0, 0, 0.55), 0 0 20px rgba(139, 92, 246, 0.2);
+  }
+
+  /* Large glass project panels (border-radius: 28px, blur: 18px) */
+  .glass-panel-project {
+    border-radius: 28px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .glass-panel-project:hover {
+    transform: translateY(-8px) scale(1.006);
+    border-color: rgba(255, 255, 255, 0.22);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 35px -10px rgba(139, 92, 246, 0.35);
+  }
+
+  /* General glass cards */
+  .glass-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.015) 100%);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+  }
+
+  .glass-card-hover {
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .glass-card-hover:hover {
+    border-color: rgba(255, 255, 255, 0.22);
+    transform: translateY(-4px);
+    box-shadow: 0 18px 40px -10px rgba(0, 0, 0, 0.65), 0 0 28px -5px rgba(255, 23, 104, 0.25);
+  }
+
+  /* Fine background technical grid */
+  .grid-bg {
+    background-size: 36px 36px;
+    background-image: 
+      linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  }
+
+  /* Blinking cursor */
+  .cursor-blink::after {
+    content: '|';
+    color: #06D6FF;
+    animation: blink 1s step-start infinite;
+    font-weight: 300;
+    margin-left: 2px;
+  }
+
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+
+  /* Premium Modal Animations (400ms scale & fade without large vertical displacement) */
+  @keyframes modalScale {
+    0% {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes modalOverlayFade {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  .animate-modal-scale {
+    animation: modalScale 380ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .animate-modal-overlay {
+    animation: modalOverlayFade 300ms ease-out forwards;
+  }
+}
+
+/* Accessibility: reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
