@@ -1,0 +1,71 @@
+{
+  "success": true,
+  "username": "Mallikarjuna_Boya",
+  "realName": "BOYA MALLIKARJUNA",
+  "profileUrl": "https://leetcode.com/u/Mallikarjuna_Boya/",
+  "avatar": "https://assets.leetcode.com/users/Mallikarjuna_Boya/avatar_1784618105.png",
+  "ranking": 116301,
+  "totalSolved": 661,
+  "easySolved": 259,
+  "mediumSolved": 292,
+  "hardSolved": 110,
+  "totalQuestions": 4095,
+  "easyTotal": 974,
+  "mediumTotal": 2135,
+  "hardTotal": 986,
+  "totalSubmissions": 1081,
+  "totalAcSubmissions": 978,
+  "acceptanceRate": "90.5%",
+  "streak": 100,
+  "activeDays": 160,
+  "badgesCount": 5,
+  "latestBadge": {
+    "id": "10708763",
+    "name": "Annual Badge",
+    "displayName": "100 Days Badge 2026",
+    "icon": "https://assets.leetcode.com/static_assets/others/100_1080_1080.png",
+    "creationDate": "2026-08-29"
+  },
+  "badges": [
+    {
+      "id": "10708763",
+      "name": "Annual Badge",
+      "displayName": "100 Days Badge 2026",
+      "icon": "https://assets.leetcode.com/static_assets/others/100_1080_1080.png",
+      "creationDate": "2026-08-29"
+    },
+    {
+      "id": "10506014",
+      "name": "Annual Badge",
+      "displayName": "50 Days Badge 2026",
+      "icon": "https://assets.leetcode.com/static_assets/others/50_1080_1080.png",
+      "creationDate": "2026-07-09"
+    },
+    {
+      "id": "10838202",
+      "name": "Daily Coding Challenge",
+      "displayName": "Sep LeetCoding Challenge",
+      "icon": "https://leetcode.com/static/images/badges/dcc-2026-9.png",
+      "creationDate": "2026-09-30"
+    },
+    {
+      "id": "10718020",
+      "name": "Daily Coding Challenge",
+      "displayName": "Aug LeetCoding Challenge",
+      "icon": "https://leetcode.com/static/images/badges/dcc-2026-8.png",
+      "creationDate": "2026-08-31"
+    },
+    {
+      "id": "10587016",
+      "name": "Daily Coding Challenge",
+      "displayName": "Jul LeetCoding Challenge",
+      "icon": "https://leetcode.com/static/images/badges/dcc-2026-7.png",
+      "creationDate": "2026-07-31"
+    }
+  ],
+  "contestRating": null,
+  "contestsAttended": 0,
+  "contestGlobalRanking": null,
+  "lastUpdated": "2026-10-25T04:08:56.843Z",
+  "cached": false
+}

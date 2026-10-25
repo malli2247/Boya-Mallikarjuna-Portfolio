@@ -95,12 +95,19 @@ export function useLeetCodeStats() {
 
     try {
       const url = `/api/leetcode${force ? '?force=true' : ''}`;
-      const res = await fetch(url, {
+      let res = await fetch(url, {
         headers: { Accept: 'application/json' },
-      });
+      }).catch(() => null);
 
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}`);
+      // Fallback to static JSON endpoint on static platforms like GitHub Pages
+      if (!res || !res.ok) {
+        res = await fetch('./api/leetcode.json', {
+          headers: { Accept: 'application/json' },
+        }).catch(() => null);
+      }
+
+      if (!res || !res.ok) {
+        throw new Error(`HTTP ${res?.status || 'unavailable'}`);
       }
 
       const data: LeetCodeStats = await res.json();

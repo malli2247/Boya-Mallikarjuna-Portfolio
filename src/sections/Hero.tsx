@@ -154,7 +154,7 @@ export const Hero: React.FC = () => {
             </button>
 
             <a
-              href="/resume/Boya_Mallikarjuna_Resume.pdf"
+              href="./resume/Boya_Mallikarjuna_Resume.pdf"
               download="Boya_Mallikarjuna_Resume.pdf"
               data-cursor="link"
               className="inline-flex items-center gap-2 px-5 sm:px-6 py-3 sm:py-3.5 rounded-full text-sm sm:text-base font-semibold text-white bg-gradient-to-r from-[#8B5CF6] to-[#06D6FF] shadow-[0_0_25px_rgba(6,214,255,0.35)] hover:shadow-[0_0_35px_rgba(6,214,255,0.55)] hover:scale-[1.03] active:scale-[0.98] transition-all duration-200"
