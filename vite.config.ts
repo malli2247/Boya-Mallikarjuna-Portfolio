@@ -1,6 +1,7 @@
 import react from '@vitejs/plugin-react';
 import { defineConfig, loadEnv } from 'vite';
 import { processContactForm } from './server/contactHandler.js';
+import { getLeetCodeStats } from './server/leetcodeHandler.js';
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
@@ -12,8 +13,34 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       {
-        name: 'contact-api-dev-middleware',
+        name: 'api-dev-middleware',
         configureServer(server) {
+          // Dev route for /api/leetcode
+          server.middlewares.use('/api/leetcode', async (req, res) => {
+            if (req.method !== 'GET') {
+              res.statusCode = 405;
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ success: false, message: 'Method Not Allowed' }));
+              return;
+            }
+
+            try {
+              const url = new URL(req.url || '', `http://${req.headers.host || 'localhost'}`);
+              const username = url.searchParams.get('username') || 'Mallikarjuna_Boya';
+              const force = url.searchParams.get('force') === 'true';
+              const result = await getLeetCodeStats(username, force);
+              res.statusCode = result.status;
+              res.setHeader('Content-Type', 'application/json');
+              res.setHeader('Cache-Control', 'public, max-age=300');
+              res.end(JSON.stringify(result.body));
+            } catch (err: any) {
+              res.statusCode = 500;
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ success: false, message: err?.message || 'Internal Server Error' }));
+            }
+          });
+
+          // Dev route for /api/contact
           server.middlewares.use('/api/contact', (req, res) => {
             if (req.method !== 'POST') {
               res.statusCode = 405;

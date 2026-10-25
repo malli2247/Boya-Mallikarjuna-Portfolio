@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Download, Mail } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
 import { GithubIcon } from '../components/SocialIcons';
 import profileImg from '../assets/profile.jpg';
 
 export const Hero: React.FC = () => {
   const roles = [
+    'AI & ML Engineer',
+    'Machine Learning Developer',
     'Full Stack Developer',
-    'Intelligent Systems Architect',
-    'Problem Solver',
+    'AI Solutions Developer',
+    'Software Engineer',
   ];
 
   const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
@@ -127,8 +129,8 @@ export const Hero: React.FC = () => {
             </h1>
           </div>
 
-          {/* Animated Role Line: "Full Stack Developer |" (Below — AI & ML Engineer, Above description) */}
-          <div className="h-7 sm:h-8 flex items-center font-mono text-base sm:text-lg lg:text-xl font-semibold mt-6 mb-4">
+          {/* Animated Role Line (Below — AI & ML Engineer, Above description) */}
+          <div className="h-7 sm:h-8 flex items-center font-mono text-base sm:text-lg lg:text-xl font-semibold mt-6 mb-4 whitespace-nowrap">
             <span className="text-transparent bg-gradient-to-r from-[#06D6FF] via-[#3B82F6] to-[#8B5CF6] bg-clip-text font-bold">
               {displayText}
             </span>
@@ -140,27 +142,46 @@ export const Hero: React.FC = () => {
             {PERSONAL_INFO.tagline}
           </p>
 
-          {/* Buttons: [View My Work] & [GitHub] */}
-          <div className="flex flex-wrap items-center gap-4">
+          {/* CTA Buttons: [View My Work] [Download Resume] [GitHub] [Let's Connect] */}
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4">
             <button
               onClick={() => scrollTo('projects')}
               data-cursor="button"
-              className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full text-base font-semibold text-white bg-gradient-to-r from-[#FF1768] via-[#7C4DFF] to-[#8B5CF6] shadow-[0_0_30px_rgba(255,23,104,0.45)] hover:shadow-[0_0_45px_rgba(139,92,246,0.7)] hover:scale-[1.03] active:scale-[0.98] transition-all duration-200"
+              className="inline-flex items-center gap-2 px-6 sm:px-7 py-3 sm:py-3.5 rounded-full text-sm sm:text-base font-semibold text-white bg-gradient-to-r from-[#FF1768] via-[#7C4DFF] to-[#8B5CF6] shadow-[0_0_30px_rgba(255,23,104,0.4)] hover:shadow-[0_0_40px_rgba(139,92,246,0.65)] hover:scale-[1.03] active:scale-[0.98] transition-all duration-200"
             >
               <span>View My Work</span>
               <ArrowRight className="w-4 h-4" />
             </button>
 
             <a
+              href="/resume/Boya_Mallikarjuna_Resume.pdf"
+              download="Boya_Mallikarjuna_Resume.pdf"
+              data-cursor="link"
+              className="inline-flex items-center gap-2 px-5 sm:px-6 py-3 sm:py-3.5 rounded-full text-sm sm:text-base font-semibold text-white bg-gradient-to-r from-[#8B5CF6] to-[#06D6FF] shadow-[0_0_25px_rgba(6,214,255,0.35)] hover:shadow-[0_0_35px_rgba(6,214,255,0.55)] hover:scale-[1.03] active:scale-[0.98] transition-all duration-200"
+            >
+              <Download className="w-4 h-4 text-white" />
+              <span>Download Resume</span>
+            </a>
+
+            <a
               href={PERSONAL_INFO.socials.github}
               target="_blank"
               rel="noopener noreferrer"
               data-cursor="link"
-              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full text-base font-medium text-slate-200 hover:text-white bg-white/[0.05] hover:bg-white/[0.10] border border-white/15 hover:border-white/30 backdrop-blur-md shadow-glass-nav transition-all duration-200"
+              className="inline-flex items-center gap-2 px-5 sm:px-6 py-3 sm:py-3.5 rounded-full text-sm sm:text-base font-medium text-slate-200 hover:text-white bg-white/[0.05] hover:bg-white/[0.10] border border-white/15 hover:border-white/30 backdrop-blur-md shadow-glass-nav transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
             >
-              <GithubIcon className="w-5 h-5 text-white" />
+              <GithubIcon className="w-4 h-4 text-white" />
               <span>GitHub</span>
             </a>
+
+            <button
+              onClick={() => scrollTo('contact')}
+              data-cursor="button"
+              className="inline-flex items-center gap-2 px-5 sm:px-6 py-3 sm:py-3.5 rounded-full text-sm sm:text-base font-medium text-slate-200 hover:text-white bg-white/[0.05] hover:bg-white/[0.10] border border-white/15 hover:border-white/30 backdrop-blur-md shadow-glass-nav transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+            >
+              <Mail className="w-4 h-4 text-[#FF1768]" />
+              <span>Let's Connect</span>
+            </button>
           </div>
         </div>
 

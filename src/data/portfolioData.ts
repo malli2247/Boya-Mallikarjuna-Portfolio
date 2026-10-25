@@ -33,6 +33,7 @@ export interface Project {
   highlights: string[];
   githubUrl?: string;
   demoUrl?: string;
+  projectUrl?: string;
   accent: 'red-pink' | 'purple-blue' | 'cyan-purple';
 }
 
@@ -100,7 +101,9 @@ export const PERSONAL_INFO = {
     hackerrank: "https://www.hackerrank.com/profile/boyamallikarjun4/",
     linkedin: "https://www.linkedin.com/in/mallikarjuna-boya/",
     email: "boyamallikarjuna183@gmail.com",
+    resume: "/resume/Boya_Mallikarjuna_Resume.pdf",
   },
+  resumeUrl: "/resume/Boya_Mallikarjuna_Resume.pdf",
   stats: [
     { label: "B.Tech CSE", value: "AI & ML Specialization", detail: "Uttaranchal University" },
     { label: "CGPA", value: "9.30 / 10", detail: "Consistent academic standing" },
@@ -319,6 +322,8 @@ export const PROJECTS: Project[] = [
       "Role-based portals for hospitals, donors, blood banks, and emergency caretakers"
     ],
     githubUrl: "https://github.com/rakthasethu/rakthasethu",
+    projectUrl: "https://raktha-sethu-smart-blood-emergency-donor-coordinatio-rf1wh0yeo.vercel.app/",
+    demoUrl: "https://raktha-sethu-smart-blood-emergency-donor-coordinatio-rf1wh0yeo.vercel.app/",
     accent: "red-pink",
   },
   {
@@ -364,6 +369,8 @@ export const PROJECTS: Project[] = [
       "Interactive simulation enabling immediate clinical scenario testing"
     ],
     githubUrl: "https://github.com/malli2247/heart-disease-ml-platform",
+    projectUrl: "https://cardiovision-ai-tu3pzquroznwxvlizyzagh.streamlit.app/",
+    demoUrl: "https://cardiovision-ai-tu3pzquroznwxvlizyzagh.streamlit.app/",
     accent: "purple-blue",
   },
   {

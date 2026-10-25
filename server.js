@@ -3,6 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import { processContactForm } from './server/contactHandler.js';
+import { getLeetCodeStats } from './server/leetcodeHandler.js';
 
 // Load environment variables from .env
 dotenv.config();
@@ -23,6 +24,15 @@ app.set('trust proxy', 1);
 app.post('/api/contact', async (req, res) => {
   const clientIp = req.headers['x-forwarded-for']?.toString().split(',')[0].trim() || req.socket.remoteAddress || '127.0.0.1';
   const result = await processContactForm(req.body, clientIp);
+  return res.status(result.status).json(result.body);
+});
+
+// API Route: GET /api/leetcode
+app.get('/api/leetcode', async (req, res) => {
+  const username = req.query?.username?.toString() || 'Mallikarjuna_Boya';
+  const force = req.query?.force === 'true';
+  const result = await getLeetCodeStats(username, force);
+  res.setHeader('Cache-Control', 'public, max-age=300');
   return res.status(result.status).json(result.body);
 });
 

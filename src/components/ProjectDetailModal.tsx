@@ -5,11 +5,13 @@ import {
   CheckCircle2, 
   AlertCircle, 
   ShieldCheck, 
-  Sparkles 
+  Sparkles,
+  RefreshCw
 } from 'lucide-react';
 import { GlassButton } from './GlassButton';
 import { GithubIcon, LeetCodeIcon } from './SocialIcons';
 import type { Project } from '../data/portfolioData';
+import { useLeetCodeStats, formatTimeAgo } from '../hooks/useLeetCodeStats';
 
 interface ProjectDetailModalProps {
   project: Project | null;
@@ -17,6 +19,13 @@ interface ProjectDetailModalProps {
 }
 
 export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project, onClose }) => {
+  const { 
+    stats: leetCodeStats, 
+    isLoading: leetCodeLoading, 
+    isUpdating: leetCodeUpdating, 
+    error: leetCodeError 
+  } = useLeetCodeStats();
+
   // Prevent background scrolling while modal is open, restore previous scroll when closed
   useEffect(() => {
     if (!project) return;
@@ -150,37 +159,133 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project,
             )}
           </div>
 
-          {/* 4. CURRENT VERIFIED STATISTICS (LeetCode specific) */}
-          {isLeetCode && project.compactStats && (
-            <div className="space-y-2.5">
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-3.5 h-3.5 text-[#06D6FF]" />
-                <h4 className="text-xs font-mono uppercase tracking-wider text-slate-300 font-bold">
-                  Current Verified Statistics
-                </h4>
+          {/* 4. LEETCODE PROGRESS (Live Auto-Sync from LeetCode Profile) */}
+          {isLeetCode && (
+            <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.02] border border-white/10 space-y-3.5">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-[#06D6FF]" />
+                  <h4 className="text-xs font-mono uppercase tracking-wider text-slate-200 font-bold">
+                    LeetCode Progress
+                  </h4>
+                  {leetCodeUpdating && (
+                    <span className="text-[10px] font-mono text-[#06D6FF] animate-pulse flex items-center gap-1">
+                      <RefreshCw className="w-3 h-3 animate-spin" />
+                      Updating LeetCode stats...
+                    </span>
+                  )}
+                </div>
+
+                {leetCodeStats?.lastUpdated && (
+                  <div className="text-[11px] font-mono text-slate-400">
+                    Last updated: <span className="text-slate-300 font-medium">{formatTimeAgo(leetCodeStats.lastUpdated)}</span>
+                  </div>
+                )}
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 text-center font-mono">
-                <div className="p-3 rounded-xl bg-white/[0.03] border border-white/10">
-                  <div className="text-xl sm:text-2xl font-bold text-white">{project.compactStats.solved}</div>
-                  <div className="text-[11px] text-slate-400 mt-0.5">Problems Solved</div>
+
+              {leetCodeLoading && !leetCodeStats && (
+                <div className="py-6 text-center text-xs font-mono text-slate-400 flex items-center justify-center gap-2">
+                  <RefreshCw className="w-4 h-4 animate-spin text-[#06D6FF]" />
+                  <span>Updating LeetCode stats...</span>
                 </div>
-                <div className="p-3 rounded-xl bg-white/[0.03] border border-cyan-500/20">
-                  <div className="text-xl sm:text-2xl font-bold text-[#06D6FF]">{project.compactStats.easy}</div>
-                  <div className="text-[11px] text-slate-400 mt-0.5">Easy</div>
+              )}
+
+              {leetCodeError && !leetCodeStats && (
+                <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-xs text-rose-300 font-mono flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+                  <span>LeetCode statistics temporarily unavailable.</span>
                 </div>
-                <div className="p-3 rounded-xl bg-white/[0.03] border border-purple-500/20">
-                  <div className="text-xl sm:text-2xl font-bold text-[#8B5CF6]">{project.compactStats.medium}</div>
-                  <div className="text-[11px] text-slate-400 mt-0.5">Medium</div>
-                </div>
-                <div className="p-3 rounded-xl bg-white/[0.03] border border-rose-500/20">
-                  <div className="text-xl sm:text-2xl font-bold text-[#FF1768]">{project.compactStats.hard}</div>
-                  <div className="text-[11px] text-slate-400 mt-0.5">Hard</div>
-                </div>
-                <div className="col-span-2 sm:col-span-1 p-3 rounded-xl bg-white/[0.03] border border-amber-500/20">
-                  <div className="text-xl sm:text-2xl font-bold text-amber-400">{project.compactStats.attempting ?? 2}</div>
-                  <div className="text-[11px] text-slate-400 mt-0.5">Attempting</div>
-                </div>
-              </div>
+              )}
+
+              {leetCodeStats && (
+                <>
+                  {/* Primary 4 Problem Metrics */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-center font-mono">
+                    <div className="p-3 rounded-xl bg-white/[0.03] border border-white/10">
+                      <div className="text-2xl font-bold text-white tracking-tight">{leetCodeStats.totalSolved}</div>
+                      <div className="text-[11px] text-slate-400 mt-0.5">Problems Solved</div>
+                      {leetCodeStats.totalQuestions > 0 && (
+                        <div className="text-[10px] text-slate-500 mt-0.5 font-sans">of {leetCodeStats.totalQuestions}</div>
+                      )}
+                    </div>
+                    <div className="p-3 rounded-xl bg-white/[0.03] border border-cyan-500/20">
+                      <div className="text-2xl font-bold text-[#06D6FF] tracking-tight">{leetCodeStats.easySolved}</div>
+                      <div className="text-[11px] text-slate-400 mt-0.5">Easy</div>
+                      {leetCodeStats.easyTotal > 0 && (
+                        <div className="text-[10px] text-slate-500 mt-0.5 font-sans">of {leetCodeStats.easyTotal}</div>
+                      )}
+                    </div>
+                    <div className="p-3 rounded-xl bg-white/[0.03] border border-purple-500/20">
+                      <div className="text-2xl font-bold text-[#8B5CF6] tracking-tight">{leetCodeStats.mediumSolved}</div>
+                      <div className="text-[11px] text-slate-400 mt-0.5">Medium</div>
+                      {leetCodeStats.mediumTotal > 0 && (
+                        <div className="text-[10px] text-slate-500 mt-0.5 font-sans">of {leetCodeStats.mediumTotal}</div>
+                      )}
+                    </div>
+                    <div className="p-3 rounded-xl bg-white/[0.03] border border-rose-500/20">
+                      <div className="text-2xl font-bold text-[#FF1768] tracking-tight">{leetCodeStats.hardSolved}</div>
+                      <div className="text-[11px] text-slate-400 mt-0.5">Hard</div>
+                      {leetCodeStats.hardTotal > 0 && (
+                        <div className="text-[10px] text-slate-500 mt-0.5 font-sans">of {leetCodeStats.hardTotal}</div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Secondary Telemetry Grid: Global Ranking, Streak, Active Days, Badges */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 font-mono text-xs">
+                    <div className="p-2.5 rounded-lg bg-black/40 border border-white/5 flex flex-col justify-between">
+                      <span className="text-[10px] uppercase text-slate-400">Global Ranking</span>
+                      <span className="text-sm font-bold text-white mt-1">
+                        {leetCodeStats.ranking ? `#${leetCodeStats.ranking.toLocaleString()}` : 'Top Tier'}
+                      </span>
+                    </div>
+
+                    <div className="p-2.5 rounded-lg bg-black/40 border border-white/5 flex flex-col justify-between">
+                      <span className="text-[10px] uppercase text-slate-400">Current Streak</span>
+                      <span className="text-sm font-bold text-emerald-400 mt-1">
+                        {leetCodeStats.streak ? `${leetCodeStats.streak} Days 🔥` : 'Active'}
+                      </span>
+                    </div>
+
+                    <div className="p-2.5 rounded-lg bg-black/40 border border-white/5 flex flex-col justify-between">
+                      <span className="text-[10px] uppercase text-slate-400">Active Days</span>
+                      <span className="text-sm font-bold text-cyan-300 mt-1">
+                        {leetCodeStats.activeDays ? `${leetCodeStats.activeDays} Days` : 'Consistent'}
+                      </span>
+                    </div>
+
+                    <div className="p-2.5 rounded-lg bg-black/40 border border-white/5 flex flex-col justify-between">
+                      <span className="text-[10px] uppercase text-slate-400">Badges</span>
+                      <span className="text-sm font-bold text-amber-400 mt-1">
+                        {leetCodeStats.badgesCount ? `${leetCodeStats.badgesCount} Badges 🏆` : 'Earned'}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Additional Live Metrics: Contest Rating, Contests Attended, Total Submissions, Latest Badge */}
+                  <div className="flex flex-wrap items-center justify-between gap-2 pt-1 text-[11px] font-mono text-slate-400">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <span>Rating: <strong className="text-slate-200">{leetCodeStats.contestRating ?? 'Active Competitor'}</strong></span>
+                      <span>•</span>
+                      <span>Contests: <strong className="text-slate-200">{leetCodeStats.contestsAttended}</strong></span>
+                      <span>•</span>
+                      <span>Total Submissions: <strong className="text-slate-200">{leetCodeStats.totalSubmissions.toLocaleString()}</strong></span>
+                      {leetCodeStats.acceptanceRate && (
+                        <>
+                          <span>•</span>
+                          <span>Acceptance: <strong className="text-emerald-400">{leetCodeStats.acceptanceRate}</strong></span>
+                        </>
+                      )}
+                    </div>
+                    {leetCodeStats.latestBadge && (
+                      <div className="flex items-center gap-1.5 text-amber-300/90">
+                        <span>Latest:</span>
+                        <span className="font-semibold">{leetCodeStats.latestBadge.displayName}</span>
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
           )}
 
@@ -276,9 +381,20 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project,
             {/* Other Projects Links */}
             {!isLeetCode && (
               <>
-                {project.githubUrl && (
+                {(project.projectUrl || project.demoUrl) && (
                   <GlassButton
                     variant="primary"
+                    size="sm"
+                    href={project.projectUrl || project.demoUrl}
+                    target="_blank"
+                    iconRight={<ExternalLink className="w-3.5 h-3.5" />}
+                  >
+                    View Project
+                  </GlassButton>
+                )}
+                {project.githubUrl && (
+                  <GlassButton
+                    variant="secondary"
                     size="sm"
                     href={project.githubUrl}
                     target="_blank"
@@ -286,17 +402,6 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project,
                     iconRight={<ExternalLink className="w-3.5 h-3.5" />}
                   >
                     GitHub
-                  </GlassButton>
-                )}
-                {project.demoUrl && (
-                  <GlassButton
-                    variant="secondary"
-                    size="sm"
-                    href={project.demoUrl}
-                    target="_blank"
-                    iconRight={<ExternalLink className="w-3.5 h-3.5" />}
-                  >
-                    Live Demo
                   </GlassButton>
                 )}
               </>
