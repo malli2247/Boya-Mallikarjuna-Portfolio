@@ -1,7 +1,5 @@
 import react from '@vitejs/plugin-react';
 import { defineConfig, loadEnv } from 'vite';
-import { processContactForm } from './server/contactHandler.js';
-import { getLeetCodeStats } from './server/leetcodeHandler.js';
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
@@ -26,6 +24,7 @@ export default defineConfig(({ mode }) => {
             }
 
             try {
+              const { getLeetCodeStats } = await import('./server/leetcodeHandler.js');
               const url = new URL(req.url || '', `http://${req.headers.host || 'localhost'}`);
               const username = url.searchParams.get('username') || 'Mallikarjuna_Boya';
               const force = url.searchParams.get('force') === 'true';
@@ -57,6 +56,7 @@ export default defineConfig(({ mode }) => {
 
             req.on('end', async () => {
               try {
+                const { processContactForm } = await import('./server/contactHandler.js');
                 const body = bodyStr ? JSON.parse(bodyStr) : {};
                 const clientIp = req.headers['x-forwarded-for']?.toString().split(',')[0].trim() || req.socket.remoteAddress || '127.0.0.1';
                 const result = await processContactForm(body, clientIp);

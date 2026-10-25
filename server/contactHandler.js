@@ -9,8 +9,8 @@ const rateLimitMap = new Map();
 const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
 const MAX_REQUESTS_PER_WINDOW = 5;
 
-// Clean up stale rate limit entries every 10 minutes
-setInterval(() => {
+// Clean up stale rate limit entries every 10 minutes (unref ensures it doesn't prevent Node process exit)
+const cleanupInterval = setInterval(() => {
   const now = Date.now();
   for (const [ip, data] of rateLimitMap.entries()) {
     if (now - data.firstRequest > RATE_LIMIT_WINDOW_MS) {
@@ -18,6 +18,9 @@ setInterval(() => {
     }
   }
 }, 10 * 60 * 1000);
+if (typeof cleanupInterval.unref === 'function') {
+  cleanupInterval.unref();
+}
 
 /**
  * Basic HTML/string sanitization
