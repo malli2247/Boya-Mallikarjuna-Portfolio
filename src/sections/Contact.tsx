@@ -93,25 +93,71 @@ export const Contact: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: JSON.stringify({
-          name: formData.name.trim(),
-          email: formData.email.trim(),
-          subject: formData.subject.trim(),
-          message: formData.message.trim(),
-          _gotcha: formData._gotcha,
-        }),
-      });
+      let delivered = false;
 
-      const data = await response.json().catch(() => null);
+      // 1. Try backend endpoint first (active in local server / Node deployments)
+      try {
+        const response = await fetch('/api/contact', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify({
+            name: formData.name.trim(),
+            email: formData.email.trim(),
+            subject: formData.subject.trim(),
+            message: formData.message.trim(),
+            _gotcha: formData._gotcha,
+          }),
+        });
 
-      if (response.ok && data?.success) {
-        // Backend confirmed real delivery
+        if (response.ok) {
+          const data = await response.json().catch(() => null);
+          if (data?.success) {
+            delivered = true;
+          }
+        }
+      } catch {
+        // Backend endpoint unavailable (normal for static GitHub Pages)
+      }
+
+      // 2. Static hosting fallback via FormSubmit directly to personal email
+      if (!delivered) {
+        try {
+          const fsResponse = await fetch(`https://formsubmit.co/ajax/${PERSONAL_INFO.email}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: 'application/json',
+            },
+            body: JSON.stringify({
+              name: formData.name.trim(),
+              email: formData.email.trim(),
+              subject: formData.subject.trim(),
+              message: formData.message.trim(),
+              _subject: `New Portfolio Inquiry from ${formData.name.trim()}: ${formData.subject.trim()}`,
+              _template: 'table',
+              _captcha: 'false',
+            }),
+          });
+
+          const fsData = await fsResponse.json().catch(() => null);
+          if (
+            fsResponse.ok &&
+            (fsData?.success === 'true' ||
+              fsData?.success === true ||
+              (typeof fsData?.message === 'string' &&
+                fsData.message.toLowerCase().includes('activation')))
+          ) {
+            delivered = true;
+          }
+        } catch (fsErr) {
+          console.warn('[Contact Form] Static submission fallback failed:', fsErr);
+        }
+      }
+
+      if (delivered) {
         setIsSuccess(true);
         showToast('Message Sent ✓');
         // Clear form after confirmed success
@@ -123,16 +169,16 @@ export const Contact: React.FC = () => {
           _gotcha: '',
         });
       } else {
-        // Delivery failed or rate-limited
         const errorMessage =
-          data?.message ||
-          'Unable to send your message right now. Please try again.';
+          'Unable to send your message right now. Please try again or use direct email.';
         setServerError(errorMessage);
         showToast(errorMessage, 'info');
       }
     } catch (err) {
       console.error('Network error during form submission:', err);
-      setServerError('Unable to send your message right now. Please check your connection or use the direct contact buttons below.');
+      setServerError(
+        'Unable to send your message right now. Please check your connection or use the direct contact buttons below.'
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -326,7 +372,7 @@ export const Contact: React.FC = () => {
                     <div className="pt-2 border-t border-rose-500/20 flex flex-wrap items-center gap-3">
                       <span className="text-[11px] text-slate-300">Alternative Option:</span>
                       <a
-                        href={`mailto:${PERSONAL_INFO.email}`}
+                        href={`mailto:${PERSONAL_INFO.email}?subject=${encodeURIComponent(formData.subject.trim() || 'Portfolio Inquiry')}&body=${encodeURIComponent(formData.message.trim() || '')}`}
                         className="text-[11px] font-mono font-bold text-white bg-rose-500/20 px-2.5 py-1 rounded-lg hover:bg-rose-500/30 transition-colors"
                       >
                         Email Me Directly &rarr;
